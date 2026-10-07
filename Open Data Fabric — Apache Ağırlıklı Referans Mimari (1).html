@@ -1,0 +1,509 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}</style><style>:root{color-scheme:light dark;--md-bg:#fff;--md-text:rgba(0,0,0,.8);--md-muted:rgba(0,0,0,.6);--md-fill:rgba(0,0,0,.04);--md-fill-strong:rgba(0,0,0,.06);--md-rule:rgba(0,0,0,.1);--md-rule-strong:rgba(0,0,0,.16);--md-link:hsl(210 100% 45%)}@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){--md-bg:#0d0d0d;--md-text:rgba(255,255,255,.85);--md-muted:rgba(255,255,255,.6);--md-fill:rgba(255,255,255,.06);--md-fill-strong:rgba(255,255,255,.09);--md-rule:rgba(255,255,255,.14);--md-rule-strong:rgba(255,255,255,.22);--md-link:hsl(210 100% 72%)}}:root[data-theme="dark"]{color-scheme:dark;--md-bg:#0d0d0d;--md-text:rgba(255,255,255,.85);--md-muted:rgba(255,255,255,.6);--md-fill:rgba(255,255,255,.06);--md-fill-strong:rgba(255,255,255,.09);--md-rule:rgba(255,255,255,.14);--md-rule-strong:rgba(255,255,255,.22);--md-link:hsl(210 100% 72%)}:root[data-theme="light"]{color-scheme:light}@media print{:root,:root[data-theme="dark"]{color-scheme:light;--md-bg:#fff;--md-text:rgba(0,0,0,.8);--md-muted:rgba(0,0,0,.6);--md-fill:rgba(0,0,0,.04);--md-fill-strong:rgba(0,0,0,.06);--md-rule:rgba(0,0,0,.1);--md-rule-strong:rgba(0,0,0,.16);--md-link:hsl(210 100% 45%)}}body{background:var(--md-bg);color:var(--md-text);max-width:720px;margin:0 auto;padding:32px;display:flex;flex-direction:column;gap:10px;font:14px/1.55 -apple-system,BlinkMacSystemFont,'SF Pro','Segoe UI',sans-serif;overflow-wrap:break-word}body>:first-child{margin-top:0}h1,h2,h3,h4,h5,h6{margin:6px 0 0;line-height:1.25;font-weight:600;text-wrap:balance}h1{font-size:1.35em}h2{font-size:1.15em;color:var(--md-muted)}h3,h4,h5,h6{font-size:1em}p,ul,ol,blockquote,table,pre,hr{margin:0}strong{font-weight:600}a{color:var(--md-link);text-decoration:none}a:hover{text-decoration:underline}ul,ol{display:flex;flex-direction:column;gap:6px;padding-left:22px}ul{list-style:disc}ol{list-style:decimal}:is(li,td,th)>*+:is(p,ul,ol,blockquote){margin-top:6px}blockquote{display:flex;flex-direction:column;gap:10px;border-left:2px solid var(--md-rule);padding-left:10px;color:var(--md-muted)}:not(pre)>code{background:var(--md-fill);padding:1px 3px;border-radius:4px;font:.92em 'SF Mono',ui-monospace,Menlo,Consolas,monospace}a>code{background:none;color:inherit}pre{background:var(--md-fill);padding:10px 12px;border-radius:6px;overflow-x:auto;font:12px/1.5 'SF Mono',ui-monospace,Menlo,Consolas,monospace;margin-block:4px}pre code{background:none;padding:0;font:inherit}table{width:100%;border-collapse:separate;border-spacing:2px;font:inherit}th,td{padding:6px 8px;border-radius:3px;text-align:left;vertical-align:top}th{background:var(--md-fill-strong);font-weight:600}td{background:var(--md-fill)}:is(th,td) :not(pre)>code{background:transparent}hr{border:0;border-top:1px solid var(--md-rule-strong);margin-block:10px}img{max-width:100%;height:auto;border-radius:4px}</style>
+</head><body>
+<h1>Open Data Fabric — Apache Ağırlıklı Referans Mimari</h1>
+<blockquote>
+<p>Amaç: Microsoft Fabric'teki temel deneyimleri mümkün olduğunca Apache/açık kaynak bileşenlerle karşılayan, on-prem / cloud / hybrid çalışabilen birleşik veri platformu.</p>
+</blockquote>
+<h2>1. Üst Seviye Mimari</h2>
+<pre class="mermaid">flowchart TB
+    U[👤 Kullanıcı / Data Engineer / BI Developer]
+
+    subgraph ACCESS[&#34;Erişim ve Platform Deneyimi&#34;]
+        PORTAL[&#34;Unified Portal / Workspace Shell\nÖzel geliştirme&#34;]
+        KC[&#34;Keycloak\nIdentity • SSO • OIDC&#34;]
+        KNOX[&#34;Apache Knox\nSecure Gateway&#34;]
+    end
+
+    subgraph META[&#34;Workspace • Catalog • Governance&#34;]
+        GRAV[&#34;Apache Gravitino\nMetalake • Catalog • Metadata&#34;]
+        ATLAS[&#34;Apache Atlas\nLineage • Classification • Governance&#34;]
+    end
+
+    subgraph BUILD[&#34;Data Engineering ve Geliştirme&#34;]
+        NIFI[&#34;Apache NiFi\nIngestion • Pipeline&#34;]
+        HOP[&#34;Apache Hop Web\nVisual Dataflow / ETL&#34;]
+        ZEP[&#34;Apache Zeppelin\nNotebook&#34;]
+        AIR[&#34;Apache Airflow\nOrchestration&#34;]
+    end
+
+    subgraph COMPUTE[&#34;Compute ve Real-Time&#34;]
+        SPARK[&#34;Apache Spark\nBatch / Distributed Compute&#34;]
+        KAFKA[&#34;Apache Kafka\nEvent Streaming&#34;]
+        FLINK[&#34;Apache Flink\nStream Processing&#34;]
+    end
+
+    subgraph LAKE[&#34;Lakehouse&#34;]
+        ICE[&#34;Apache Iceberg\nOpen Table Format&#34;]
+        OZONE[&#34;Apache Ozone\nDistributed Object Storage&#34;]
+    end
+
+    subgraph SERVE[&#34;SQL • Semantic • BI&#34;]
+        TRINO[&#34;Trino\nFederated SQL Endpoint&#34;]
+        KYLIN[&#34;Apache Kylin\nSemantic / OLAP Acceleration&#34;]
+        SUPER[&#34;Apache Superset\nBI • Dashboard • Visualization&#34;]
+    end
+
+    subgraph OBS[&#34;Observability&#34;]
+        SKY[&#34;Apache SkyWalking\nMetrics • Logs • Traces • Alerts&#34;]
+    end
+
+    U --&gt; PORTAL
+    PORTAL --&gt; KC
+    KC --&gt; KNOX
+    KNOX --&gt; GRAV
+
+    GRAV &lt;--&gt; ATLAS
+    GRAV --&gt; NIFI
+    GRAV --&gt; HOP
+    GRAV --&gt; ZEP
+    GRAV --&gt; TRINO
+    GRAV --&gt; KYLIN
+
+    AIR -. orchestrates .-&gt; NIFI
+    AIR -. orchestrates .-&gt; HOP
+    AIR -. orchestrates .-&gt; ZEP
+    AIR -. orchestrates .-&gt; SPARK
+
+    NIFI --&gt; ICE
+    HOP --&gt; ICE
+    ZEP --&gt; SPARK
+    SPARK &lt;--&gt; ICE
+    ICE &lt;--&gt; OZONE
+
+    NIFI --&gt; KAFKA
+    KAFKA --&gt; FLINK
+    FLINK --&gt; ICE
+
+    TRINO &lt;--&gt; ICE
+    KYLIN &lt;--&gt; ICE
+    TRINO --&gt; SUPER
+    KYLIN --&gt; SUPER
+
+    SKY -. observes .-&gt; NIFI
+    SKY -. observes .-&gt; HOP
+    SKY -. observes .-&gt; AIR
+    SKY -. observes .-&gt; SPARK
+    SKY -. observes .-&gt; KAFKA
+    SKY -. observes .-&gt; FLINK
+    SKY -. observes .-&gt; TRINO
+    SKY -. observes .-&gt; KYLIN
+    SKY -. observes .-&gt; SUPER
+</pre>
+<h2>2. Fabric ile Katman Eşleştirmesi</h2>
+<pre class="mermaid">flowchart LR
+    subgraph FABRIC[&#34;Microsoft Fabric&#34;]
+        FP[Fabric Portal / Workspace]
+        FC[OneLake Catalog]
+        FL[Lakehouse]
+        FD[Delta Lake]
+        FO[OneLake]
+        FPIPE[Data Pipeline]
+        FDF[Dataflow Gen2]
+        FNB[Notebook]
+        FSP[Spark]
+        FSQL[SQL Analytics Endpoint]
+        FSM[Semantic Model]
+        FBI[Power BI]
+        FEV[Eventstream / RTI]
+        FMON[Monitoring Hub]
+    end
+
+    subgraph OPEN[&#34;Open Data Fabric&#34;]
+        OP[Unified Portal + Gravitino Metalake]
+        OG[Apache Gravitino]
+        OL[Lakehouse Experience]
+        OI[Apache Iceberg]
+        OO[Apache Ozone]
+        ON[Apache NiFi]
+        OH[Apache Hop Web]
+        OZ[Apache Zeppelin]
+        OS[Apache Spark]
+        OT[Trino]
+        OK[Apache Kylin]
+        OSU[Apache Superset]
+        OEV[Apache Kafka + Flink]
+        OM[Apache SkyWalking]
+    end
+
+    FP -.≈.-&gt; OP
+    FC -.≈.-&gt; OG
+    FL -.≈.-&gt; OL
+    FD -.≈.-&gt; OI
+    FO -.≈.-&gt; OO
+    FPIPE -.≈.-&gt; ON
+    FDF -.≈.-&gt; OH
+    FNB -.≈.-&gt; OZ
+    FSP -.=.-&gt; OS
+    FSQL -.≈.-&gt; OT
+    FSM -.≈.-&gt; OK
+    FBI -.≈.-&gt; OSU
+    FEV -.≈.-&gt; OEV
+    FMON -.≈.-&gt; OM
+</pre>
+<h2>3. Lakehouse İç Yapısı</h2>
+<pre class="mermaid">flowchart TB
+    G[&#34;Apache Gravitino\nCatalog / Metadata&#34;]
+
+    subgraph LH[&#34;Lakehouse&#34;]
+        B[&#34;Bronze / STG\nRaw + Incremental&#34;]
+        S[&#34;Silver / DWH\nClean • Conformed • Dim/Fact&#34;]
+        GD[&#34;Gold / Datamart\nServing-ready&#34;]
+    end
+
+    I[&#34;Apache Iceberg\nSchema • Partition • Snapshot • Table Metadata&#34;]
+    O[&#34;Apache Ozone\nPhysical Data / Parquet Objects&#34;]
+
+    G --&gt; B
+    G --&gt; S
+    G --&gt; GD
+    B --&gt; S --&gt; GD
+    B --&gt; I
+    S --&gt; I
+    GD --&gt; I
+    I --&gt; O
+</pre>
+<h2>4. Kullanıcı Deneyimi — Fabric Benzeri Portal</h2>
+<pre><code class="language-text">┌──────────────────────────────────────────────────────────────────────┐
+│                         OPEN DATA FABRIC                             │
+├──────────────────────────────────────────────────────────────────────┤
+│ Workspace: Sales Analytics                         User: selim       │
+│                                                                      │
+│  + New                                                               │
+│                                                                      │
+│  🗄 Lakehouse        → Gravitino + Iceberg + Ozone                   │
+│  🔀 Pipeline         → Apache NiFi                                   │
+│  🧩 Dataflow         → Apache Hop Web                                │
+│  📓 Notebook         → Apache Zeppelin + Spark                       │
+│  🧮 SQL              → Trino                                         │
+│  🔷 Semantic Model   → Apache Kylin                                  │
+│  📊 Report           → Apache Superset                               │
+│  ⚡ Real-Time        → Apache Kafka + Flink                          │
+│  🧬 Lineage          → Apache Atlas                                  │
+│  📈 Monitor          → Apache SkyWalking                             │
+└──────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<h2>5. Veri Akışı Örneği</h2>
+<pre class="mermaid">flowchart LR
+    SRC[(SQL Server / PostgreSQL / API / Files)]
+    N[Apache NiFi]
+    H[Apache Hop]
+    B[Bronze]
+    S[Silver]
+    G[Gold]
+    T[Trino]
+    K[Apache Kylin]
+    BI[Apache Superset]
+
+    SRC --&gt;|Ingest / Copy| N
+    N --&gt; B
+    B --&gt;|Visual ETL| H
+    H --&gt; S
+    S --&gt;|Spark / SQL Transform| G
+    G --&gt; T
+    G --&gt; K
+    T --&gt; BI
+    K --&gt; BI
+</pre>
+<h2>6. Bileşenlerin Sorumlulukları</h2>
+<table>
+<thead>
+<tr>
+<th>Katman</th>
+<th>Ürün</th>
+<th>Ana sorumluluk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Portal</td>
+<td>Özel geliştirme</td>
+<td>Tek giriş noktası, workspace ve Fabric-benzeri UX</td>
+</tr>
+<tr>
+<td>Identity</td>
+<td>Keycloak</td>
+<td>Kullanıcı, grup, SSO, OIDC/OAuth2</td>
+</tr>
+<tr>
+<td>Gateway</td>
+<td>Apache Knox</td>
+<td>Veri platformu servislerine güvenli erişim</td>
+</tr>
+<tr>
+<td>Catalog</td>
+<td>Apache Gravitino</td>
+<td>Metalake, catalog, schema, table ve metadata omurgası</td>
+</tr>
+<tr>
+<td>Governance</td>
+<td>Apache Atlas</td>
+<td>Lineage, classification ve governance</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>Apache Ozone</td>
+<td>Dağıtık fiziksel object storage</td>
+</tr>
+<tr>
+<td>Table Format</td>
+<td>Apache Iceberg</td>
+<td>ACID lakehouse tabloları ve metadata</td>
+</tr>
+<tr>
+<td>Ingestion</td>
+<td>Apache NiFi</td>
+<td>Kaynaklardan veri taşıma ve akış tabanlı pipeline</td>
+</tr>
+<tr>
+<td>Visual ETL</td>
+<td>Apache Hop Web</td>
+<td>Dataflow Gen2 benzeri görsel dönüşüm</td>
+</tr>
+<tr>
+<td>Orchestration</td>
+<td>Apache Airflow</td>
+<td>DAG, dependency, schedule ve job orchestration</td>
+</tr>
+<tr>
+<td>Notebook</td>
+<td>Apache Zeppelin</td>
+<td>Web notebook ve interaktif geliştirme</td>
+</tr>
+<tr>
+<td>Compute</td>
+<td>Apache Spark</td>
+<td>Büyük ölçekli batch / distributed processing</td>
+</tr>
+<tr>
+<td>SQL</td>
+<td>Trino</td>
+<td>Federated/ad-hoc SQL endpoint</td>
+</tr>
+<tr>
+<td>Semantic / OLAP</td>
+<td>Apache Kylin</td>
+<td>Semantic/OLAP model ve query acceleration</td>
+</tr>
+<tr>
+<td>BI</td>
+<td>Apache Superset</td>
+<td>Dashboard, rapor ve visualization</td>
+</tr>
+<tr>
+<td>Event Streaming</td>
+<td>Apache Kafka</td>
+<td>Event ingestion / event bus</td>
+</tr>
+<tr>
+<td>Stream Compute</td>
+<td>Apache Flink</td>
+<td>Stateful real-time processing</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>Apache SkyWalking</td>
+<td>Metrics, logs, traces, alerts ve topology</td>
+</tr>
+</tbody>
+</table>
+<h2>7. Tasarım İlkesi</h2>
+<p>Platformun merkezi yalnızca storage değildir:</p>
+<pre><code class="language-text">                    Unified Portal
+                          │
+                    Apache Knox
+                          │
+                  Apache Gravitino
+                   (mantıksal omurga)
+                          │
+       ┌──────────────────┼──────────────────┐
+       │                  │                  │
+ Data Engineering       SQL / BI          Streaming
+       │                  │                  │
+       └──────────────────┼──────────────────┘
+                          │
+                    Apache Iceberg
+                          │
+                    Apache Ozone
+                   (fiziksel omurga)
+</code></pre>
+<p><strong>Gravitino = mantıksal metadata/catalog omurgası</strong><br>
+<strong>Iceberg = lakehouse tablo katmanı</strong><br>
+<strong>Ozone = fiziksel veri omurgası</strong><br>
+<strong>Portal = bütün bileşenleri tek ürün deneyiminde birleştiren katman</strong></p>
+<h2>8. Fabric'e Göre En Önemli Fark</h2>
+<p>Microsoft Fabric'te portal, identity, catalog, storage, compute, semantic model ve BI tek yönetilen ürün deneyimi içinde gelir. Bu mimaride teknik motorların büyük bölümü hazır açık kaynak projelerden oluşur; bizim geliştirmemiz gereken temel değer <strong>bu motorları tek workspace, ortak yetkilendirme, ortak metadata ve tutarlı kullanıcı deneyimi altında birleştirmektir.</strong></p>
+<h2>9. Portal Entegrasyon Modeli — Sürükle-Bırak Deneyimi</h2>
+<p>Fabric'te kullanıcı Dataflow Gen2'yi tek bir portal içinde, ayrılmadan sürükleyip bırakır. Bu mimaride sürükle-bırak canvas'ları (Apache Hop Web, Apache NiFi) zaten mevcut ama her biri kendi ayrı arayüzünde çalışıyor. &quot;Unified Portal / Workspace Shell&quot; henüz <strong>özel geliştirme</strong> olarak işaretli olduğundan, bu iki canvas'ın Portal'a nasıl bağlanacağı netleştirilmelidir.</p>
+<h3>Neden sıfırdan native editor önerilmiyor</h3>
+<p>Bir node-based flow editor'ü (React Flow / Rete.js vb. ile) sıfırdan geliştirmek; connector şeması, validation, execution engine entegrasyonu, versiyonlama gibi Hop ve NiFi'nin yıllardır olgunlaştırdığı yetenekleri yeniden inşa etmek anlamına gelir. Bu, dokümanın 8. bölümündeki &quot;asıl değerimiz motorları birleştirmektir&quot; ilkesiyle çelişir.</p>
+<h3>Önerilen üç fazlı yol</h3>
+<pre class="mermaid">flowchart LR
+    F1[&#34;Faz 1\nAkıllı Embed\nSSO + tema uyumu&#34;]
+    F2[&#34;Faz 2\nMini-Builder\nSabit adımlı sihirbaz&#34;]
+    F3[&#34;Faz 3\nTam Native Canvas\nYalnızca kanıtlanmış talep&#34;]
+
+    F1 --&gt;|kullanım verisi| F2
+    F2 --&gt;|kanıtlanmış talep| F3
+</pre>
+<table>
+<thead>
+<tr>
+<th>Faz</th>
+<th>Kapsam</th>
+<th>Efor</th>
+<th>Ne zaman</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 — Akıllı embed</strong></td>
+<td>Hop Web ve NiFi, Portal içine iframe olarak gömülür; Keycloak OIDC token'ı ile SSO session otomatik geçirilir; Portal navigasyonu/teması CSS override ile uyumlulaştırılır</td>
+<td>Düşük</td>
+<td>Baştan itibaren</td>
+</tr>
+<tr>
+<td><strong>2 — Mini-builder</strong></td>
+<td>Genel amaçlı editör değil, kısıtlı ve hedefe özel bir sihirbaz (ör. &quot;kaynak seç → dönüştür → hedef seç&quot; 3 adım); arkada NiFi/Hop API'sine flow tanımı gönderilir</td>
+<td>Orta</td>
+<td>Kullanıcı araştırması &quot;basit senaryolar Portal'dan çıkmadan olsun&quot; derse</td>
+</tr>
+<tr>
+<td><strong>3 — Tam native canvas</strong></td>
+<td>Portal'ın kendi sürükle-bırak editörü, Hop/NiFi API'lerini arkada çağırır</td>
+<td>Yüksek</td>
+<td>Yalnızca Faz 2 kullanım oranı yüksekse ve gelişmiş senaryo talebi kanıtlanmışsa</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sonuç:</strong> Fabric'in &quot;tek arayüz&quot; hissi büyük ölçüde entegrasyon kalitesinden (SSO, tutarlı tema, hızlı geçiş) gelir, illa tek kod tabanından değil. Faz 1 iyi yapıldığında kullanıcı deneyimi farkı çoğu senaryoda fark edilmeyecek kadar küçülür ve aylarca sürecek bir editor geliştirme riski baştan alınmamış olur.</p>
+<h2>10. Revizyon Notları — Önerilen Alternatifler</h2>
+<table>
+<thead>
+<tr>
+<th>İhtiyaç</th>
+<th>Mevcut öneri</th>
+<th>Neden yetersiz kalabilir</th>
+<th>Önerilen</th>
+<th>Ne sağlıyor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gateway</td>
+<td>Apache Knox</td>
+<td>Kerberos SPNEGO odaklı; OIDC-only ortamda gereksiz operasyonel yük, her servis için özel topology tanımı gerekir</td>
+<td>APISIX / Envoy + OIDC plugin</td>
+<td>Keycloak ile doğrudan, deklaratif route tanımı, rate-limiting ve metrics kutudan çıkar</td>
+</tr>
+<tr>
+<td>Lineage</td>
+<td>Apache Atlas (tek başına)</td>
+<td>Hook'lar Hive/HBase/Kafka kökenli; Spark/Trino/Iceberg için resmi/bakımlı hook yok</td>
+<td>OpenLineage → Atlas'a besleme</td>
+<td>Spark/Trino/Airflow'da olgun native destek; run-level lineage otomatik toplanır</td>
+</tr>
+<tr>
+<td>Semantic model</td>
+<td>Apache Kylin</td>
+<td>Kylin bir OLAP pre-aggregation motoru, Power BI Semantic Model'in ilişki/ölçü/DAX katmanına karşılık gelmiyor; Iceberg desteği sürüme bağlı</td>
+<td>dbt Semantic Layer / Cube (Kylin'in yanında, yerine değil)</td>
+<td>Versiyonlanmış, tek doğruluk kaynağı metrik tanımları; Kylin hesaplama motoru olarak kalabilir</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>SkyWalking (her bileşen için)</td>
+<td>Mikroservis/tracing odaklı; Kafka/Spark/Trino/Kylin için olgun plugin seti yok</td>
+<td>Prometheus + Grafana + Loki/Tempo (SkyWalking yalnızca Portal için)</td>
+<td>Hazır JMX exporter'lar ile sıfır ek geliştirmeyle dashboard</td>
+</tr>
+<tr>
+<td>Metadata omurgası</td>
+<td>Apache Gravitino</td>
+<td>NiFi/Hop/Zeppelin ile native entegrasyon yok (yalnızca Trino/Spark/Flink olgun)</td>
+<td>Değişiklik yok — ayrı iş kalemi olarak işaretlenmeli</td>
+<td>Gerçekçi efor planlaması</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Not: Trino ve Keycloak Apache Software Foundation projesi değildir; mevcut tasarımda teknik ihtiyaç nedeniyle bilinçli olarak korunmuştur.</p>
+</blockquote>
+
+
+<!--claude-mermaid-runtime-begin:3477-->
+<style>.mermaid-diagram{margin-block:4px}.mermaid-diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}</style>
+<script src="/_runtime/mermaid-11.16.1.min.js"></script>
+<script>(function(){
+var CFG={"palettes":{"light":{"surface":"#f4efe4","text":"#42392e","line":"#8a7f6d","border":"#7a6c52","bg":"#fffdf8"},"dark":{"surface":"#262b34","text":"#f2f3f5","line":"#a8adb8","border":"#9aa4b8","bg":"#1f232b"}}};
+if(typeof mermaid==='undefined')return;
+var pres=Array.prototype.slice.call(document.querySelectorAll('pre.mermaid')).filter(function(p){if(p.hasAttribute('data-claude-mermaid-claimed'))return false;p.setAttribute('data-claude-mermaid-claimed','1');return true;});
+if(!pres.length)return;
+var mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
+var root=document.documentElement;
+var items=pres.map(function(pre){
+var mount=document.createElement('div');mount.className='mermaid-diagram';
+return {pre:pre,mount:mount,src:pre.textContent||''};
+});
+var seq=0;
+var renderGen=0;
+var lastKey='';
+function pageBg(fallback){
+var els=[document.body,document.documentElement];
+for(var i=0;i<els.length;i++){
+var c=els[i]&&getComputedStyle(els[i]).backgroundColor;
+if(c&&c!=='transparent'&&c!=='rgba(0, 0, 0, 0)')return c;
+}
+return fallback;
+}
+function render(){
+var theme=root.getAttribute('data-theme');
+var dark=theme==='dark'||(!!(mq&&mq.matches)&&theme!=='light');
+var pal=dark?CFG.palettes.dark:CFG.palettes.light;
+var bg=pageBg(pal.bg);
+var key=(dark?'d':'l')+'|'+bg;
+if(key===lastKey)return;
+lastKey=key;
+var gen=++renderGen;
+var font=getComputedStyle(document.body).fontFamily||'sans-serif';
+var nat={useMaxWidth:false};
+mermaid.initialize({
+startOnLoad:false,securityLevel:'strict',theme:'base',
+flowchart:nat,sequence:nat,er:nat,state:nat,class:nat,pie:nat,
+gantt:nat,journey:nat,timeline:nat,gitGraph:nat,mindmap:nat,xyChart:nat,
+quadrantChart:nat,sankey:nat,c4:nat,requirement:nat,block:nat,
+packet:nat,kanban:nat,architecture:nat,radar:nat,
+themeVariables:{background:bg,mainBkg:pal.surface,primaryColor:pal.surface,
+primaryTextColor:pal.text,lineColor:pal.line,primaryBorderColor:pal.border,
+nodeBorder:pal.border,clusterBorder:pal.border,edgeLabelBackground:bg,
+clusterBkg:'rgba(127,127,127,0.07)',titleColor:pal.text,
+darkMode:dark,rowOdd:bg,rowEven:'rgba(127,127,127,0.07)',
+attributeBackgroundColorOdd:bg,attributeBackgroundColorEven:'rgba(127,127,127,0.07)',
+fontSize:'16px',fontFamily:font},
+themeCSS:'.node rect, .node circle, .node polygon, .node path, .cluster rect { stroke-width: 2px; }'
+});
+items.forEach(function(it){
+var id='claude-mermaid-'+seq++;
+mermaid.render(id,it.src).then(function(r){
+if(gen!==renderGen)return;
+var prev=it.pre.previousElementSibling;
+if(prev&&prev.className==='mermaid-diagram'&&prev!==it.mount)return;
+it.mount.innerHTML=r.svg;
+if(!it.mount.parentNode)it.pre.parentNode.insertBefore(it.mount,it.pre);
+it.pre.style.display='none';
+},function(){
+var scratch=document.getElementById(id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+scratch=document.getElementById('d'+id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+if(gen!==renderGen)return;
+if(it.mount.parentNode)it.mount.parentNode.removeChild(it.mount);
+it.pre.style.display='';
+});
+});
+}
+render();
+if(mq&&mq.addEventListener)mq.addEventListener('change',render);
+if(typeof MutationObserver!=='undefined')new MutationObserver(render).observe(root,{attributes:true,attributeFilter:['data-theme']});
+})();</script>
+<!--claude-mermaid-runtime-end-->
+</body></html>
